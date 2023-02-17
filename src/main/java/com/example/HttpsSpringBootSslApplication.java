@@ -1,19 +1,18 @@
 package com.example;
 
-import org.apache.catalina.Context;
-import org.apache.catalina.connector.Connector;
-import org.apache.tomcat.util.descriptor.web.SecurityCollection;
-import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
+import com.example.model.role.Role;
+import com.example.model.role.RoleName;
+import com.example.model.user.User;
+import com.example.model.user.UserService;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
-import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Controller
+import java.util.HashSet;
+
 @SpringBootApplication
 public class HttpsSpringBootSslApplication {
 
@@ -21,36 +20,27 @@ public class HttpsSpringBootSslApplication {
         SpringApplication.run(HttpsSpringBootSslApplication.class, args);
     }
 
-    @GetMapping("/")
-    public String index(final Model model) {
-        model.addAttribute("title", "Spring Boot + SSL (HTTPS)");
-        model.addAttribute("msg", "Welcome to the SSL!");
-        return "index";
-    }
-    @Bean
-    public ServletWebServerFactory servletContainer() {
-        TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
-            @Override
-            protected void postProcessContext(Context context) {
-                SecurityConstraint securityConstraint = new SecurityConstraint();
-                securityConstraint.setUserConstraint("CONFIDENTIAL");
-                SecurityCollection collection = new SecurityCollection();
-                collection.addPattern("/*");
-                securityConstraint.addCollection(collection);
-                context.addConstraint(securityConstraint);
-            }
-        };
-        tomcat.addAdditionalTomcatConnectors(redirectConnector());
-        return tomcat;
-    }
-
-    private Connector redirectConnector() {
-        Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
-        connector.setScheme("http");
-        connector.setPort(8080);
-        connector.setSecure(false);
-        connector.setRedirectPort(8443);
-        return connector;
-    }
+//    @Bean
+//    CommandLineRunner run(UserService userService) {
+//        return args -> {
+//            userService.saveRole(new Role(1l, RoleName.ROLE_USER));
+//            userService.saveRole(new Role(2l, RoleName.ROLE_MANAGER));
+//            userService.saveRole(new Role(3l, RoleName.ROLE_ADMIN));
+//            userService.saveRole(new Role(4l, RoleName.ROLE_SUPER_ADMIN));
+//
+//            userService.saveUser(new User(1l, "bahodir", "bahodir", "1995", new HashSet<>()));
+//            userService.saveUser(new User(2l, "java", "java", "1996", new HashSet<>()));
+//            userService.saveUser(new User(3l, "samo", "samo", "1997", new HashSet<>()));
+//            userService.saveUser(new User(4l, "javohir", "javohir", "1999", new HashSet<>()));
+//
+//            userService.addRoleToUser("bahodir", RoleName.ROLE_USER);
+//            userService.addRoleToUser("bahodir", RoleName.ROLE_MANAGER);
+//            userService.addRoleToUser("java", RoleName.ROLE_MANAGER);
+//            userService.addRoleToUser("samo", RoleName.ROLE_ADMIN);
+//            userService.addRoleToUser("javohir", RoleName.ROLE_SUPER_ADMIN);
+//            userService.addRoleToUser("javohir", RoleName.ROLE_ADMIN);
+//            userService.addRoleToUser("javohir", RoleName.ROLE_USER);
+//        };
+//    }
 
 }
