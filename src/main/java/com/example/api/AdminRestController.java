@@ -2,6 +2,7 @@ package com.example.api;
 
 import com.example.model.user.User;
 import com.example.model.user.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/admin")
 public class AdminRestController {
     private final UserService userService;
-
+    @Operation(summary = "Set category id")
     @GetMapping("/{id}")
     public ResponseEntity<User> getId(@PathVariable Long id) {
         User user = userService.findById(id);

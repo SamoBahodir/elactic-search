@@ -1,25 +1,39 @@
 package com.example;
 
-import com.example.model.role.Role;
-import com.example.model.role.RoleName;
-import com.example.model.user.User;
-import com.example.model.user.UserService;
-import org.springframework.boot.CommandLineRunner;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.core.env.Environment;
 
-import java.util.HashSet;
-
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Optional;
+@Slf4j
 @SpringBootApplication
-public class HttpsSpringBootSslApplication {
+@EnableConfigurationProperties
+public class SwaggerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(HttpsSpringBootSslApplication.class, args);
+        var run = SpringApplication.run(SwaggerApplication.class, args);
+        initApplication(run.getEnvironment());    }
+    private static void initApplication(Environment env) {
+        var serverPort = Optional.ofNullable(env.getProperty("server.port")).orElse("8080");
+        var hostAddress = "localhost";
+        try {
+            hostAddress = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            log.warn("The host name could not be determined, using `localhost` as fallback");
+        }
+        log.info(
+                env.getProperty("spring.application.name"),
+                serverPort,
+                hostAddress,
+                serverPort,
+                env.getActiveProfiles()
+        );
     }
-
 //    @Bean
 //    CommandLineRunner run(UserService userService) {
 //        return args -> {
@@ -42,5 +56,4 @@ public class HttpsSpringBootSslApplication {
 //            userService.addRoleToUser("javohir", RoleName.ROLE_USER);
 //        };
 //    }
-
 }

@@ -1,5 +1,7 @@
 server:
   port: 8080
+#  shutdown: graceful #Wait if it has any action
+#  forward-headers-strategy: framework
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5433/JWT
@@ -16,8 +18,10 @@ spring:
 
   application:
     name: tracinglogs
-
-jwt:
-  token:
-    secret: jwtappdemo
-    expired: 3600000
+elasticsearch:
+  url: localhost:9200
+springdoc:
+  swagger-ui:
+    path: /v1/swagger/index.html
+  api-docs:
+    path: /v1/swagger/api-docs
